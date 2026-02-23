@@ -1,0 +1,255 @@
+                                Hypothesis Development (Due Day 2)
+
+You will develop two of your own hypotheses based on that intelligence briefing, MITRE ATT&CK techniques, and
+open source intelligence. For each of the two hypotheses you will answer three questions:
+
+  . Step 1 - Write a coherent and relevant hypothesis.
+  . Step 2 - Add relevant data sources identified during your research (e.g. Sysmon event codes and Windows
+    event IDs). NEED EVENT CODE 1 AND 4688!!!!!!!!
+  . Step 3 - Add Kibana Query Language (KQL) fields of importance to the relevant data sources and identify
+    three pieces of intelligence that would allow a Cyber Defense Analyst (CDA) to perform a basic hunt for the
+    Malicious Cyber Activity (MCA). Example: "process.executable: *. exe*"
+Your hypotheses are not due until the end of day 2 but may be submitted when complete.
+
+
+
+
+
+                                    Hunt Executions (Due Day 2)
+
+You will execute four hunts for MCA within a Kibana instance, determine if any MCA is present based on the results
+of the hunts, and answer questions to verify your findings. Your hunts will be based off information provided,
+including data sources, a pre-made hypothesis, and indicators. No information from the previous two sections
+should be used to perform your hunt executions.
+
+Throughout your hunts you will take meticulous Operational Notes (opnotes) to document your findings both as
+verification of your findings and as a tool for future actions during your hunts. Your opnotes will be saved on your
+host computer and submitted in the directed location once all hunts are submitted.
+
+Your hunts are not due until the end of day 2 but may be submitted when complete.
+
+
+
+
+NEW RANGE
+                                      Clear
+
+Ensure you are using the new PCTE instance and virtual machines for this portion.
+
+In this portion of your capstone you will demonstrate your ability to execute a Cyber Protection Team (CPT) Clear
+operation using proper procedures discussed in the CDA-Basic course. You will quarantine a host, remove malicious
+artifacts from that host, and restore the host back to normal operations.
+
+Toolkit: Command Line Interface
+
+
+NEW RANGE
+                              Enable Hardening
+
+Ensure you are using the new PCTE instance and virtual machines for this portion.
+
+In this portion of your capstone you will test your ability to enable hardening in supported mission partner
+networks. Concepts tested include Risk Mitigation Plan (RMP) and various types of attacks and their corresponding
+mitigations. Any content from previous lessons can be used during the capstone.
+
+In the first part of this assessment you will observe the results of an Assured Compliance Assessment Solution
+(ACAS) scan, and answer questions about possible mitigations to address present vulnerabilities.
+
+In the second part of this assessment you will walk through various scenarios, and answer questions about the
+attack and appropriate mitigations. You DO NOT need to make configuration changes.
+
+
+NEW RANGE
+                                      Assess
+
+Ensure you are using the new PCTE instance and virtual machines for this portion.
+
+In this portion of your capstone you will be evaluated on your ability to assess a mission partner's network based
+on concepts learned in previous lessons. You will verify a mission partner's current implementation of a Security
+Information and Event Management (SIEM) solution, and assess compliance with an expected end state.
+
+You will be provided a script that you will execute to answer the questions associated with your assessment of the
+mission partner's SIEM solution and compliance.
+
+
+
+
+                                      Range-isms
+
+These values should be filtered out of your traffic using the Add filter option in Kibana for all exercises in capstone.
+
+Field: Message
+Operator: is not one of
+Values:
+
+  . *simspace*
+  . *ruby*
+  . *puppet*
+  . *vmware*
+  . *onedrive*
+  . *onenote*
+  . *ue -*
+  . DismHost.exe
+
+
+
+
+
+
+            Sysmon event codes and Windows event IDs
+                            PROCESS CREATION
+Event Code 1 - Process creation, logging when a new process is started on a system.
+Field names of interest:
+
+. @Timestamp
+. Host.hostname
+. Host.ip
+. User.name
+. Process.executable
+. Process.pid
+. Process.command_line
+. Process.parent.executable
+. Process.ppid
+. Process.parent.command_line
+. Do NOT use winlog.user.name
+                                      Network connection
+Event Code 3 - Network connection, logs TCP and UDP network connections made by processes.
+Field names of interest:
+
+. @Timestamp
+. Process.executable
+. Process.pid
+. Source.ip
+. Source.port
+· Destination.ip
+. Destination.port
+. User.name
+. Host.hostname
+. Host.ip
+. Do NOT use winlog.user.name
+
+                                          PROCESS CREATION
+Event ID 4688 - Process creation, windows security log event indicating a new process has been created.
+Field names of interest:
+
+. @Timestamp
+. Winlog.event_data.CommandLine
+. Winlog.event_data.NewProcessName
+. Winlog.event_data.NewProcessld
+· User.name
+. Host.hostname
+. Host.ip
+
+
+
+                                          CREATE REMOTE THREAD
+Event Code 8 - CreateRemoteThread, logs generated when a process creates a thread in another process,
+notably associated with Process Injection.
+Field names of interest:
+
+. @Timestamp
+. Winlog.event_data.Sourcelmage (Malicious process path)
+. Winlog.event_data.SourceProcessld (Malicious process PID)
+. Winlog.event_data.Targetlmage (Victim process path)
+. Winlog.event_data.TargetProcessld (Victim process PID)
+. Host.hostname
+. Host.ip
+. Do NOT use winlog.user.name
+
+
+                                        FILE CREATION
+Event Code 11 - File creation, logs generated a <new file is created, downloaded or overwritten on a system.
+Field names of interest:
+
+. @Timestamp
+. File.target (The file being created)
+. Process.executable (The process used to create the file)
+. Process.pid
+. host.hostname
+. host.ip
+. Do NOT use winlog.user.name
+
+
+                                        REGISTRY
+Event Code 13 - Registry event, logs generated when modifications to registry values are made, capturing the
+process that made the change, the affected registry key and value name, and the data that was set or deleted.
+Field names of interest:
+
+. @Timestamp
+. Winlog.event_data.TargetObject (Target key value pair)
+. Winlog.event_data.Details (Data in the target key value pair)
+. Host.hostname
+. Host.ip
+. Process.executable
+. Process.pid
+. Do NOT use winlog.user.name
+
+
+                                                FILE DELETION
+Event Code 23 - File deletion, Logs generated when a file is deleted and archives a copy of the deleted file in a
+specified directory, by default C:\Sysmon.
+Field names of interest:
+
+. @Timestamp
+. File.target (The file being deleted)
+. Process.executable (Process used to delete the file)
+. Process.pid
+. Host.hostname
+. Host.ip
+. Do NOT use winlog.user.name
+
+
+                              AUDIT LOG CLEAR
+Event ID 1102 - Logs generated when the audit log was successfully cleared.
+Field names of interest:
+
+. @Timestamp
+. Winlog.channel (Log type cleared, security etc.)
+. Winlog.user_data.SubjectUserName (User name responsible without the relevant domain)
+. Winlog.user_data.SubjectDomainName (Domain name for associated user)
+. Event.Action (The action performed on associated log)
+. Event.Outcome (SUCCESS if the action was successfully performed on the log in question)
+. Host.hostname
+. Host.ip
+. Message
+
+
+
+                                                  NEW ACCOUNT
+Event ID 4720 - Logs generated when a new user account is created. The presence of this event ID shows the
+successful creation of user accounts, identification of the binaries used is required.
+
+                                                  FAILDED LOGIN
+Event ID 4625 - Logs generated when there is a failed attempt to logon to a computer regardless of logon type.
+Field names of interest:
+
+· @Timestamp
+. Host.hostname
+. Host.ip
+. Message
+
+
+
+
+                                          Practice Hypothesis Development
+
+You will be tasked with writing hypotheses based on relevant intelligence provided to you. There are three steps to
+the hypothesis development process:
+
+. 1. State your hypothesis - write a clear and concise hypothesis statement that contain all necessary detail.
+The tense used in your writing is important, past tense is the correct way to convey a hypothesis statement
+(e.g. may have ... ).
+
+. 2. State what data sources(s) does your hypothesis rely on - using the provided Technique ID related to your
+hypothesis, research and provide the data source(s) (Event codes and Event IDs) that would allow an analyst
+to prove or disprove your hypothesis. Ensure you provide a description of the data source(s).
+o Sysmon event code 1 and windows event ID 4688 should always be provided as relevant data
+source(s).
+o MITRE ATT&CK should be used as a primary method of research for identifying data source(s) and for
+identifying indicators commonly used in the associated technique(s).
+
+. 3. Provide indicators you expect to find during the hunt execution that will act as evidence to support your
+hypothesis. Copy the event codes and event IDs found in step two and add relevant field names to those
+data source(s). Then, using the same source of those event codes, research and report three relevant
+indicators per hypothesis in the correct fields, these should be treated as active Kibana queries.
+o Example: Event.code: 1 and Process.executable: *process.exe*
